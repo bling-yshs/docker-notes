@@ -97,7 +97,7 @@ docker stop c02
 
 ### 删除容器
 
-#### 删除单个容器
+#### 强制删除单个容器
 
 ``` bash
 docker rm -f c02
@@ -105,13 +105,29 @@ docker rm -f c02
 
 |参数|说明|备注|
 |---|---|---|
-|-f|强制删除某个容器，即使它还在运行中||
+|-f|代表强制删除，即使目标还在运行中||
 
-#### 删除所有容器
+#### 强制删除所有容器
 
 ``` bash
-
+docker rm -f $(docker ps -aq)
 ```
+
+### 删除镜像
+
+#### 强制删除单个镜像
+
+``` bash
+docker rmi -f alpine
+```
+
+#### 强制删除所有镜像
+
+``` bash
+docker rmi -f $(docker images -aq)
+```
+
+Windows 请使用 Windows PowerShell，CMD 无法运行此命令
 
 ### 查看镜像内容
 
@@ -168,7 +184,7 @@ CMD ["java", "-jar", "./target/backend-0.0.1-SNAPSHOT.jar"]
 因为我们是部署 Vue 项目，所以显然选择一个 Node 镜像是最合适的，所以我们在第一行写入
 
 ``` dockerfile
-FROM node:current-alpine3.18
+FROM node:lts-alpine3.18
 ```
 
 #### 设置工作目录
@@ -221,3 +237,35 @@ RUN npm install pnpm -g \
 ``` dockerfile
 CMD pnpm run dev
 ```
+
+#### 通过 Dockerfile 构建镜像
+
+在进行这一步之前，强烈推荐你先到 Docker Hub 注册一个账号，因为等下会用到账号的用户名
+
+构建命令
+
+``` bash
+docker build -t blingyshs/my-vue-project:0.0.1 .
+```
+
+|参数|说明|备注|
+|---|---|---|
+|-t|代表给容器打标签，加上就对了||
+|blingyshs/|你自己的 Docker Hub 用户名+一个/|不加也可以，只是无法将自己的镜像上传到 Docker Hub 而已，不影响本地使用|
+|my-vue-project|自己给镜像取的名字，随便取||
+|:0.0.1|冒号用于分隔镜像名与标签，标签没有固定格式，随便写，这里是 0.0.1||
+|.|代表当前目录，不能省略||
+
+#### 运行 Dockerfile 构建出来的镜像
+
+``` bash
+docker run --name mvp01 -p 5173:5173 blingyshs/my-vue-project:0.0.1
+```
+
+|参数|说明|备注|
+|---|---|---|
+|-p|映射端口|-p 5173:5173 代表映射容器内部的 5173 端口到本地的 5173 端口，两个端口不一定要一致|
+
+## Docker Compose
+
+下次再写
