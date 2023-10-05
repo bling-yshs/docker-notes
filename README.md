@@ -2,6 +2,12 @@
 
 非常实用的 docker 笔记，灰常滴推荐呀
 
+## 安装 Docker
+
+### 下载 Docker Desktop
+
+下载地址：[https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/)
+
 ## 基础概念
 
 ### 镜像
